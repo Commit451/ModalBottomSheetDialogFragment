@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         buttonShowWithHeader.setOnClickListener {
-            ModalBottomSheetDialogFragment.Builder(R.menu.options)
+            ModalBottomSheetDialogFragment.Builder(R.menu.option_lots)
                     .header("Neat")
                     .show(supportFragmentManager, "HI", {
                     })

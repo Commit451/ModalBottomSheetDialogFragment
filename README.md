@@ -35,6 +35,15 @@ ModalBottomSheetDialogFragment.Builder(R.menu.options)
                 .show()
     })
 ```
+You can also customize things to your liking:
+```kotlin
+ModalBottomSheetDialogFragment.Builder(R.menu.option_lots)
+    .layout(R.layout.item_custom)
+    .header("Neat")
+    .columns(3)
+    .show(supportFragmentManager, "custom", {
+    })
+```
 
 License
 --------

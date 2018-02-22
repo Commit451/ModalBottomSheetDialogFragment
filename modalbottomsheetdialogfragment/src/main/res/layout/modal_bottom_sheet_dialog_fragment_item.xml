@@ -22,6 +22,7 @@
         android:layout_gravity="center_vertical"
         android:gravity="center_vertical"
         android:textColor="@android:color/black"
+        android:textSize="16sp"
         tools:text="Share" />
 
 </LinearLayout>
