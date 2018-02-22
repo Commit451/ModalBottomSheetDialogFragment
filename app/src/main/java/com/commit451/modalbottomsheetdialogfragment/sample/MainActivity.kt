@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         buttonCustom.setOnClickListener {
-            ModalBottomSheetDialogFragment.Builder(R.menu.options)
+            ModalBottomSheetDialogFragment.Builder(R.menu.option_lots)
                     .layout(R.layout.item_custom)
                     .show(supportFragmentManager, "HI", {
                     })

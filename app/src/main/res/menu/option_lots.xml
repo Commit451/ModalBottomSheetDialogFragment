@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_favorite"
+        android:icon="@drawable/ic_favorite_black_24dp"
+        android:title="Favorite" />
+
+    <item
+        android:id="@+id/action_share"
+        android:icon="@drawable/ic_share_black_24dp"
+        android:title="Share" />
+
+    <item
+        android:id="@+id/action_edit"
+        android:icon="@drawable/ic_edit_black_24dp"
+        android:title="Edit" />
+
+    <item
+        android:id="@+id/action_cake"
+        android:icon="@drawable/ic_cake_black_24dp"
+        android:title="Cake" />
+
+    <item
+        android:id="@+id/action_android"
+        android:icon="@drawable/ic_android_black_24dp"
+        android:title="Android" />
+
+    <item
+        android:id="@+id/action_beach"
+        android:icon="@drawable/ic_beach_access_black_24dp"
+        android:title="Beach" />
+
+    <item
+        android:id="@+id/action_mouse"
+        android:icon="@drawable/ic_mouse_black_24dp"
+        android:title="Mouse" />
+
+    <item
+        android:id="@+id/action_bluetooth"
+        android:icon="@drawable/ic_bluetooth_black_24dp"
+        android:title="Bluetooth" />
+
+    <item
+        android:id="@+id/action_folder"
+        android:icon="@drawable/ic_folder_black_24dp"
+        android:title="Folder" />
+
+    <item
+        android:id="@+id/action_attach"
+        android:icon="@drawable/ic_attachment_black_24dp"
+        android:title="Attach" />
+
+    <item
+        android:id="@+id/action_money"
+        android:icon="@drawable/ic_attach_money_black_24dp"
+        android:title="Money" />
+
+    <item
+        android:id="@+id/action_run"
+        android:icon="@drawable/ic_directions_run_black_24dp"
+        android:title="Run" />
+
+    <item
+        android:id="@+id/action_explore"
+        android:icon="@drawable/ic_explore_black_24dp"
+        android:title="Explore" />
+
+    <item
+        android:id="@+id/action_call"
+        android:icon="@drawable/ic_call_black_24dp"
+        android:title="Call" />
+
+</menu>
