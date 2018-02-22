@@ -4,24 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:padding="16dp">
 
     <ImageView
         android:id="@android:id/icon"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_gravity="center_vertical"
-        android:layout_marginRight="8dp"
-        android:contentDescription="@null" />
+        android:layout_gravity="center"
+        android:contentDescription="@null"
+        tools:src="@drawable/ic_call_black_24dp" />
 
     <TextView
         android:id="@android:id/text1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:gravity="center_vertical"
-        android:textColor="@color/colorAccent"
+        android:layout_gravity="center"
+        android:gravity="center"
         tools:text="Share" />
 
 </LinearLayout>

@@ -7,6 +7,7 @@ import android.support.annotation.MenuRes
 import android.support.design.widget.BottomSheetDialogFragment
 import android.support.v4.app.FragmentManager
 import android.support.v7.view.menu.MenuBuilder
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -25,12 +26,18 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
         private const val KEY_MENU = "menu"
         private const val KEY_LAYOUT = "layout"
+        private const val KEY_COLUMNS = "columns"
+        private const val KEY_HEADER = "header"
+        private const val KEY_HEADER_LAYOUT_RES = "header_layout_res"
 
         private fun newInstance(builder: Builder): ModalBottomSheetDialogFragment {
             val fragment = ModalBottomSheetDialogFragment()
             val args = Bundle()
             args.putInt(KEY_MENU, builder.menuRes)
             args.putInt(KEY_LAYOUT, builder.layoutRes)
+            args.putInt(KEY_COLUMNS, builder.columns)
+            args.putString(KEY_HEADER, builder.header)
+            args.putInt(KEY_HEADER_LAYOUT_RES, builder.headerLayoutRes)
             fragment.arguments = args
             return fragment
         }
@@ -69,9 +76,27 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
             dismissAllowingStateLoss()
         })
         adapter.layoutRes = arguments.getInt(KEY_LAYOUT)
+        adapter.header = arguments.getString(KEY_HEADER)
+        adapter.headerLayoutRes = arguments.getInt(KEY_HEADER_LAYOUT_RES)
 
         list.adapter = adapter
-        list.layoutManager = LinearLayoutManager(context)
+        val columns = arguments.getInt(KEY_COLUMNS)
+        if (columns == 1) {
+            list.layoutManager = LinearLayoutManager(context)
+        } else {
+            val layoutManager = GridLayoutManager(context, columns)
+            layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return if (adapter.header != null && position == 0) {
+                        columns
+                    } else {
+                        1
+                    }
+                }
+            }
+            list.layoutManager = layoutManager
+        }
+
         adapter.set(options)
     }
 
@@ -84,9 +109,23 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
         @LayoutRes
         internal var layoutRes = R.layout.modal_bottom_sheet_dialog_fragment_item
+        internal var columns = 1
+        internal var header: String? = null
+        internal var headerLayoutRes = R.layout.modal_bottom_sheet_dialog_fragment_header
 
         fun layout(@LayoutRes layoutRes: Int): Builder {
             this.layoutRes = layoutRes
+            return this
+        }
+
+        fun columns(columns: Int): Builder {
+            this.columns = columns
+            return this
+        }
+
+        fun header(header: String, @LayoutRes layoutRes: Int = R.layout.modal_bottom_sheet_dialog_fragment_header): Builder {
+            this.header = header
+            this.headerLayoutRes = layoutRes
             return this
         }
 
@@ -101,28 +140,59 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
         }
     }
 
-    internal class Adapter(private val callback: (id: Int) -> Unit) : RecyclerView.Adapter<MyViewHolder>() {
+    internal class Adapter(private val callback: (id: Int) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+        companion object {
+            const val VIEW_TYPE_HEADER = 0
+            const val VIEW_TYPE_ITEM = 1
+        }
 
         private val options = mutableListOf<Option>()
         internal var layoutRes = R.layout.modal_bottom_sheet_dialog_fragment_item
+        internal var headerLayoutRes = R.layout.modal_bottom_sheet_dialog_fragment_header
+        internal var header: String? = null
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-            val view = LayoutInflater.from(parent.context).inflate(layoutRes, parent, false)
-            val holder = MyViewHolder(view)
-            view.setOnClickListener {
-                val option = options[holder.adapterPosition]
-                callback.invoke(option.id)
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+            when (viewType) {
+                VIEW_TYPE_HEADER -> {
+                    val view = LayoutInflater.from(parent.context).inflate(headerLayoutRes, parent, false)
+                    return HeaderViewHolder(view)
+                }
+                VIEW_TYPE_ITEM -> {
+                    val view = LayoutInflater.from(parent.context).inflate(layoutRes, parent, false)
+                    val holder = ItemViewHolder(view)
+                    view.setOnClickListener {
+                        val option = options[holder.adapterPosition]
+                        callback.invoke(option.id)
+                    }
+                    return holder
+                }
             }
-            return holder
+
+            throw IllegalStateException("Wht is this")
         }
 
-        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-            val option = options[position]
-            holder.bind(option)
+        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+            val correctedPosition = if (header == null) position else position - 1
+            if (holder is ItemViewHolder) {
+                val option = options[correctedPosition]
+                holder.bind(option)
+            } else if (holder is HeaderViewHolder) {
+                holder.bind(header)
+            }
         }
 
         override fun getItemCount(): Int {
-            return options.size
+            return if (header == null) options.size else options.size + 1
+        }
+
+        override fun getItemViewType(position: Int): Int {
+            if (header != null) {
+                if (position == 0) {
+                    return VIEW_TYPE_HEADER
+                }
+            }
+            return VIEW_TYPE_ITEM
         }
 
         fun set(options: List<Option>) {
@@ -132,7 +202,7 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
         }
     }
 
-    internal class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    internal class ItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         private var text: TextView = view.findViewById(android.R.id.text1)
         private var icon: ImageView = view.findViewById(android.R.id.icon)
@@ -140,6 +210,15 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
         fun bind(option: Option) {
             text.text = option.title
             icon.setImageDrawable(option.icon)
+        }
+    }
+
+    internal class HeaderViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+
+        private var text: TextView = view.findViewById(android.R.id.text1)
+
+        fun bind(header: String?) {
+            text.text = header
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.commit451.modalbottomsheetdialogfragment.sample
 
+import android.app.ProgressDialog.show
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -20,9 +21,18 @@ class MainActivity : AppCompatActivity() {
                     })
         }
 
+        buttonShowWithHeader.setOnClickListener {
+            ModalBottomSheetDialogFragment.Builder(R.menu.options)
+                    .header("Neat")
+                    .show(supportFragmentManager, "HI", {
+                    })
+        }
+
         buttonCustom.setOnClickListener {
             ModalBottomSheetDialogFragment.Builder(R.menu.option_lots)
                     .layout(R.layout.item_custom)
+                    .header("Neat")
+                    .columns(3)
                     .show(supportFragmentManager, "HI", {
                     })
         }

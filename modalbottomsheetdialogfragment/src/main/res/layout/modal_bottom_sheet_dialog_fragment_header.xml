@@ -7,21 +7,12 @@
     android:orientation="horizontal"
     android:padding="16dp">
 
-    <ImageView
-        android:id="@android:id/icon"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_gravity="center_vertical"
-        android:layout_marginRight="16dp"
-        android:contentDescription="@null" />
-
     <TextView
         android:id="@android:id/text1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:gravity="center_vertical"
-        android:textColor="@android:color/black"
         tools:text="Share" />
 
 </LinearLayout>

@@ -17,6 +17,14 @@
         android:text="Show" />
 
     <Button
+        android:id="@+id/buttonShowWithHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="8dp"
+        android:text="Show With Header" />
+
+    <Button
         android:id="@+id/buttonCustom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
