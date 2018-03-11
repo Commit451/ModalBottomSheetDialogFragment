@@ -4,6 +4,8 @@ Modal bottom sheet dialog based on the [Material Guidelines](https://material.io
 
 [![Build Status](https://travis-ci.org/Commit451/ModalBottomSheetDialogFragment.svg?branch=master)](https://travis-ci.org/Commit451/ModalBottomSheetDialogFragment) [![](https://jitpack.io/v/Commit451/ModalBottomSheetDialogFragment.svg)](https://jitpack.io/#Commit451/ModalBottomSheetDialogFragment)
 
+<img src="/art/simple.png?raw=true" width="200px"> <img src="/art/header.png?raw=true" width="200px"> <img src="/art/custom.png?raw=true" width="200px">
+
 ## Usage
 `ModalBottomSheetDialogFragment`s are controlled via a menu item resource. The menu item resource defined what the title, icon, and ID is of each option. The menu item resource might looks something like this:
 ```xml
