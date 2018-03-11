@@ -25,6 +25,9 @@ android {
 
 dependencies {
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
     api 'com.android.support:design:27.1.0'
     api 'com.android.support:recyclerview-v7:27.1.0'
 }
+
+apply from: 'https://raw.githubusercontent.com/Commit451/gradle-android-javadocs/1.0.0/gradle-android-javadocs.gradle'
