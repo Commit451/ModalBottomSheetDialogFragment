@@ -7,7 +7,7 @@ Modal bottom sheet dialog based on the [Material Guidelines](https://material.io
 <img src="/art/simple.png?raw=true" width="200px"> <img src="/art/header.png?raw=true" width="200px"> <img src="/art/custom.png?raw=true" width="200px">
 
 ## Usage
-`ModalBottomSheetDialogFragment`s are controlled via a menu item resource. The menu item resource defined what the title, icon, and ID is of each option. The menu item resource might looks something like this:
+`ModalBottomSheetDialogFragment`s are typically inflated via a menu item resource. The menu item resource defines the title, icon, and ID is of each `Option`. The menu item resource might looks something like this:
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
@@ -29,7 +29,7 @@ Modal bottom sheet dialog based on the [Material Guidelines](https://material.io
 
 </menu>
 ```
-Then, use the builder to create and show the bottom sheet dialog:
+Use the builder to create and show the bottom sheet dialog:
 ```kotlin
 ModalBottomSheetDialogFragment.Builder()
     .add(R.menu.options)
@@ -53,6 +53,7 @@ ModalBottomSheetDialogFragment.Builder()
     .columns(3)
     .show(supportFragmentManager, "custom")
 ```
+See the sample app for more.
 
 License
 --------
