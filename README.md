@@ -29,20 +29,27 @@ Modal bottom sheet dialog based on the [Material Guidelines](https://material.io
 ```
 Then, use the builder to create and show the bottom sheet dialog:
 ```kotlin
-ModalBottomSheetDialogFragment.Builder(R.menu.options)
-    .show(supportFragmentManager, "options", {
-        Snackbar.make(root, "Selected option $it", Snackbar.LENGTH_SHORT)
-                .show()
-    })
+ModalBottomSheetDialogFragment.Builder()
+    .add(R.menu.options)
+    .show(supportFragmentManager, "options")
+```
+Make sure that your activity or fragment implements `ModalBottomSheetDialogFragment.Listener`. For example:
+```kotlin
+override fun onModalOptionSelected(tag: String?, option: Option) {
+    Snackbar.make(root, "Selected option ${option.title} from fragment with tag $tag", Snackbar.LENGTH_SHORT)
+            .show()
+}
 ```
 You can also customize things to your liking:
 ```kotlin
-ModalBottomSheetDialogFragment.Builder(R.menu.option_lots)
+ModalBottomSheetDialogFragment.Builder()
+    .add(R.menu.option_lots)
+    //custom option, without needing menu XML
+    .add(OptionRequest(123, "Custom", R.drawable.ic_bluetooth_black_24dp))
     .layout(R.layout.item_custom)
     .header("Neat")
     .columns(3)
-    .show(supportFragmentManager, "custom", {
-    })
+    .show(supportFragmentManager, "custom")
 ```
 
 License

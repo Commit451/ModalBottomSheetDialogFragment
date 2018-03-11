@@ -16,7 +16,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.commit451.modalbottomsheetdialogfragment.ModalBottomSheetDialogFragment.Builder
 
+@SuppressLint("RestrictedApi")
 /**
  * [BottomSheetDialogFragment] which can show a selection of options. Create using the [Builder]
  */
@@ -24,7 +26,8 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
     companion object {
 
-        private const val KEY_MENU = "menu"
+        private const val KEY_OPTIONS = "options"
+        private const val KEY_RESOURCES = "resources"
         private const val KEY_LAYOUT = "layout"
         private const val KEY_COLUMNS = "columns"
         private const val KEY_HEADER = "header"
@@ -33,7 +36,8 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
         private fun newInstance(builder: Builder): ModalBottomSheetDialogFragment {
             val fragment = ModalBottomSheetDialogFragment()
             val args = Bundle()
-            args.putInt(KEY_MENU, builder.menuRes)
+            args.putParcelableArrayList(KEY_OPTIONS, builder.options)
+            args.putIntegerArrayList(KEY_RESOURCES, builder.menuResources)
             args.putInt(KEY_LAYOUT, builder.layoutRes)
             args.putInt(KEY_COLUMNS, builder.columns)
             args.putString(KEY_HEADER, builder.header)
@@ -45,7 +49,15 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
     private lateinit var list: RecyclerView
     private lateinit var adapter: Adapter
-    private var callback: ((id: Int) -> Unit)? = null
+    private var listener: Listener? = null
+
+    val menu by lazy {
+        MenuBuilder(context)
+    }
+
+    val menuInflater by lazy {
+        MenuInflater(context)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.modal_bottom_sheet_dialog_fragment, container, false)
@@ -58,21 +70,23 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
         val arguments = arguments
                 ?: throw IllegalStateException("You need to create this via the builder")
 
-        val menuRes = arguments.getInt(KEY_MENU)
-        if (menuRes == 0) {
-            throw IllegalStateException("You must provide a menu resource")
+        val optionRequests = arguments.getParcelableArrayList<OptionRequest>(KEY_OPTIONS)
+        val resources = arguments.getIntegerArrayList(KEY_RESOURCES)
+
+        val options = mutableListOf<Option>()
+
+        //resource inflation is done first, so it does not actually retain the true ordering.
+        //Maybe fix this later?
+        resources.forEach {
+            inflate(it, options)
         }
 
-        val menu = MenuBuilder(context)
-        MenuInflater(context).inflate(menuRes, menu)
-        val options = mutableListOf<Option>()
-        for (i in 0 until menu.size()) {
-            val item = menu.getItem(i)
-            val option = Option(item.itemId, item.icon, item.title)
-            options.add(option)
+        optionRequests.forEach {
+            options.add(it.toOption(context!!))
         }
+
         adapter = Adapter({
-            callback?.invoke(it)
+            listener?.onModalOptionSelected(this@ModalBottomSheetDialogFragment.tag, it)
             dismissAllowingStateLoss()
         })
         adapter.layoutRes = arguments.getInt(KEY_LAYOUT)
@@ -98,20 +112,49 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
         }
 
         adapter.set(options)
+        listener = bindHost()
     }
 
-    fun show(fragmentManager: FragmentManager, tag: String, callback: (id: Int) -> Unit) {
-        this.callback = callback
-        show(fragmentManager, tag)
+    private fun inflate(menuRes: Int, options: MutableList<Option>) {
+        menuInflater.inflate(menuRes, menu)
+        for (i in 0 until menu.size()) {
+            val item = menu.getItem(i)
+            val option = Option(item.itemId, item.title, item.icon)
+            options.add(option)
+        }
     }
 
-    class Builder(@MenuRes internal val menuRes: Int) {
+    private fun bindHost(): Listener {
+        if (parentFragment != null) {
+            if (parentFragment is Listener) {
+                return parentFragment as Listener
+            }
+        }
+        if (context is Listener) {
+            return context as Listener
+        }
+        throw IllegalStateException("ModalBottomSheetDialogFragment must be attached to a parent (activity or fragment) that implements the ModalBottomSheetDialogFragment.Listener")
+    }
 
+    class Builder {
+
+        internal var menuResources = ArrayList<Int>()
+        internal var options = ArrayList<OptionRequest>()
         @LayoutRes
         internal var layoutRes = R.layout.modal_bottom_sheet_dialog_fragment_item
         internal var columns = 1
         internal var header: String? = null
         internal var headerLayoutRes = R.layout.modal_bottom_sheet_dialog_fragment_header
+
+        fun add(@MenuRes menuRes: Int): Builder {
+            menuResources.add(menuRes)
+            return this
+        }
+
+        fun add(option: OptionRequest): Builder {
+            options.add(option)
+            return this
+        }
 
         fun layout(@LayoutRes layoutRes: Int): Builder {
             this.layoutRes = layoutRes
@@ -133,14 +176,18 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
             return newInstance(this)
         }
 
-        fun show(fragmentManager: FragmentManager, tag: String, callback: (id: Int) -> Unit): ModalBottomSheetDialogFragment {
+        fun show(fragmentManager: FragmentManager, tag: String): ModalBottomSheetDialogFragment {
             val dialog = build()
-            dialog.show(fragmentManager, tag, callback)
+            dialog.show(fragmentManager, tag)
             return dialog
         }
     }
 
-    internal class Adapter(private val callback: (id: Int) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    interface Listener {
+        fun onModalOptionSelected(tag: String?, option: Option)
+    }
+
+    internal class Adapter(private val callback: (option: Option) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
         companion object {
             const val VIEW_TYPE_HEADER = 0
@@ -163,7 +210,7 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
                     val holder = ItemViewHolder(view)
                     view.setOnClickListener {
                         val option = options[holder.adapterPosition]
-                        callback.invoke(option.id)
+                        callback.invoke(option)
                     }
                     return holder
                 }
