@@ -199,18 +199,31 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
         internal var headerLayoutRes = R.layout.modal_bottom_sheet_dialog_fragment_header
         internal var header: String? = null
 
+        private var hasHeader = false
+
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+
             when (viewType) {
+
                 VIEW_TYPE_HEADER -> {
+
                     val view = LayoutInflater.from(parent.context).inflate(headerLayoutRes, parent, false)
+                    hasHeader = true
                     return HeaderViewHolder(view)
                 }
                 VIEW_TYPE_ITEM -> {
                     val view = LayoutInflater.from(parent.context).inflate(layoutRes, parent, false)
                     val holder = ItemViewHolder(view)
                     view.setOnClickListener {
-                        val option = options[holder.adapterPosition]
-                        callback.invoke(option)
+                        if (hasHeader) {
+                            val position = holder.adapterPosition - 1
+                            val option = options[position]
+                            callback.invoke(option)
+                        }else{
+                            val option = options[holder.adapterPosition]
+                            callback.invoke(option)
+                        }
+
                     }
                     return holder
                 }
