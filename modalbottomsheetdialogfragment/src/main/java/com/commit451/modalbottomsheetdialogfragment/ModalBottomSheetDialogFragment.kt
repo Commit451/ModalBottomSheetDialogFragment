@@ -51,11 +51,11 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
     private lateinit var adapter: Adapter
     private var listener: Listener? = null
 
-    val menu by lazy {
+    private val menu by lazy {
         MenuBuilder(context)
     }
 
-    val menuInflater by lazy {
+    private val menuInflater by lazy {
         MenuInflater(context)
     }
 
@@ -136,6 +136,9 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
         throw IllegalStateException("ModalBottomSheetDialogFragment must be attached to a parent (activity or fragment) that implements the ModalBottomSheetDialogFragment.Listener")
     }
 
+    /**
+     * Used to build a [ModalBottomSheetDialogFragment]
+     */
     class Builder {
 
         internal var menuResources = ArrayList<Int>()
@@ -146,36 +149,59 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
         internal var header: String? = null
         internal var headerLayoutRes = R.layout.modal_bottom_sheet_dialog_fragment_header
 
+        /**
+         * Inflate the given menu resource to the options
+         */
         fun add(@MenuRes menuRes: Int): Builder {
             menuResources.add(menuRes)
             return this
         }
 
+        /**
+         * Add an option to the sheet
+         */
         fun add(option: OptionRequest): Builder {
             options.add(option)
             return this
         }
 
+        /**
+         * Set the custom layout resource to inflate for each option. Note that you need to have a
+         * TextView with a resource id of @android:id/text1 if your option has a title and an ImageView
+         * with a resource id of @android:id/icon if your option has a drawable associated
+         */
         fun layout(@LayoutRes layoutRes: Int): Builder {
             this.layoutRes = layoutRes
             return this
         }
 
+        /**
+         * Set the number of columns you want for your options
+         */
         fun columns(columns: Int): Builder {
             this.columns = columns
             return this
         }
 
+        /**
+         * Add a custom header to the modal, using the custom layout if provided
+         */
         fun header(header: String, @LayoutRes layoutRes: Int = R.layout.modal_bottom_sheet_dialog_fragment_header): Builder {
             this.header = header
             this.headerLayoutRes = layoutRes
             return this
         }
 
+        /**
+         * Build the [ModalBottomSheetDialogFragment]. You still need to call [ModalBottomSheetDialogFragment.show] when you want it to show
+         */
         fun build(): ModalBottomSheetDialogFragment {
             return newInstance(this)
         }
 
+        /**
+         * Build and show the [ModalBottomSheetDialogFragment]
+         */
         fun show(fragmentManager: FragmentManager, tag: String): ModalBottomSheetDialogFragment {
             val dialog = build()
             dialog.show(fragmentManager, tag)
@@ -183,7 +209,13 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
         }
     }
 
+    /**
+     * Listener for when the modal options are selected
+     */
     interface Listener {
+        /**
+         * A modal option has been selected
+         */
         fun onModalOptionSelected(tag: String?, option: Option)
     }
 
