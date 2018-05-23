@@ -27,7 +27,6 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
     companion object {
 
         private const val KEY_OPTIONS = "options"
-        private const val KEY_RESOURCES = "resources"
         private const val KEY_LAYOUT = "layout"
         private const val KEY_COLUMNS = "columns"
         private const val KEY_HEADER = "header"
@@ -37,7 +36,6 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
             val fragment = ModalBottomSheetDialogFragment()
             val args = Bundle()
             args.putParcelableArrayList(KEY_OPTIONS, builder.options)
-            args.putIntegerArrayList(KEY_RESOURCES, builder.menuResources)
             args.putInt(KEY_LAYOUT, builder.layoutRes)
             args.putInt(KEY_COLUMNS, builder.columns)
             args.putString(KEY_HEADER, builder.header)
@@ -50,10 +48,6 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
     private lateinit var list: RecyclerView
     private lateinit var adapter: Adapter
     private var listener: Listener? = null
-
-    private val menu by lazy {
-        MenuBuilder(context)
-    }
 
     private val menuInflater by lazy {
         MenuInflater(context)
@@ -70,19 +64,19 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
         val arguments = arguments
                 ?: throw IllegalStateException("You need to create this via the builder")
 
-        val optionRequests = arguments.getParcelableArrayList<OptionRequest>(KEY_OPTIONS)
-        val resources = arguments.getIntegerArrayList(KEY_RESOURCES)
+        val optionHolders = arguments.getParcelableArrayList<OptionHolder>(KEY_OPTIONS)
 
         val options = mutableListOf<Option>()
 
-        //resource inflation is done first, so it does not actually retain the true ordering.
-        //Maybe fix this later?
-        resources.forEach {
-            inflate(it, options)
-        }
-
-        optionRequests.forEach {
-            options.add(it.toOption(context!!))
+        optionHolders.forEach {
+            val resource = it.resource
+            val optionRequest = it.optionRequest
+            if (resource != null) {
+                inflate(resource, options)
+            }
+            if (optionRequest != null) {
+                options.add(optionRequest.toOption(context!!))
+            }
         }
 
         adapter = Adapter({
@@ -116,6 +110,7 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
     }
 
     private fun inflate(menuRes: Int, options: MutableList<Option>) {
+        val menu = MenuBuilder(context)
         menuInflater.inflate(menuRes, menu)
         for (i in 0 until menu.size()) {
             val item = menu.getItem(i)
@@ -141,8 +136,7 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
      */
     class Builder {
 
-        internal var menuResources = ArrayList<Int>()
-        internal var options = ArrayList<OptionRequest>()
+        internal var options = ArrayList<OptionHolder>()
         @LayoutRes
         internal var layoutRes = R.layout.modal_bottom_sheet_dialog_fragment_item
         internal var columns = 1
@@ -153,7 +147,7 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
          * Inflate the given menu resource to the options
          */
         fun add(@MenuRes menuRes: Int): Builder {
-            menuResources.add(menuRes)
+            options.add(OptionHolder(menuRes, null))
             return this
         }
 
@@ -161,7 +155,7 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
          * Add an option to the sheet
          */
         fun add(option: OptionRequest): Builder {
-            options.add(option)
+            options.add(OptionHolder(null, option))
             return this
         }
 

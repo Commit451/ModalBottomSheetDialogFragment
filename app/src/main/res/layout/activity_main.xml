@@ -32,4 +32,12 @@
         android:layout_margin="8dp"
         android:text="Show Custom" />
 
+    <Button
+        android:id="@+id/buttonOrder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="8dp"
+        android:text="Show Retains Order" />
+
 </LinearLayout>
