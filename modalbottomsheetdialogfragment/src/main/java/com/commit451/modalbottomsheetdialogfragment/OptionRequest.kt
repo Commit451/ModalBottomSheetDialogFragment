@@ -4,8 +4,8 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Parcel
 import android.os.Parcelable
-import android.support.annotation.DrawableRes
-import android.support.v4.content.res.ResourcesCompat
+import androidx.annotation.DrawableRes
+import androidx.core.content.res.ResourcesCompat
 
 /**
  * Request for an option you can select within the modal

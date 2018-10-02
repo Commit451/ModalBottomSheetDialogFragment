@@ -1,11 +1,11 @@
 package com.commit451.modalbottomsheetdialogfragment.sample
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.commit451.modalbottomsheetdialogfragment.ModalBottomSheetDialogFragment
 import com.commit451.modalbottomsheetdialogfragment.Option
 import com.commit451.modalbottomsheetdialogfragment.OptionRequest
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), ModalBottomSheetDialogFragment.Listener {
