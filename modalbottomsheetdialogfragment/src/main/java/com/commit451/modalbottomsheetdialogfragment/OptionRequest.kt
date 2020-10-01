@@ -23,7 +23,7 @@ class OptionRequest(val id: Int, val title: String, @DrawableRes val icon: Int?)
 
     constructor(source: Parcel) : this(
             source.readInt(),
-            source.readString(),
+            source.readString() ?: "",
             source.readValue(Int::class.java.classLoader) as Int?
     )
 
