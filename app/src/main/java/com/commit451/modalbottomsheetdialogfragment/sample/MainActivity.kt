@@ -5,30 +5,33 @@ import androidx.appcompat.app.AppCompatActivity
 import com.commit451.modalbottomsheetdialogfragment.ModalBottomSheetDialogFragment
 import com.commit451.modalbottomsheetdialogfragment.Option
 import com.commit451.modalbottomsheetdialogfragment.OptionRequest
+import com.commit451.modalbottomsheetdialogfragment.sample.databinding.ActivityMainBinding
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), ModalBottomSheetDialogFragment.Listener {
 
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        buttonShow.setOnClickListener {
+        binding.buttonShow.setOnClickListener {
             ModalBottomSheetDialogFragment.Builder()
                     .add(R.menu.options)
                     .add(OptionRequest(123, "Custom", R.drawable.ic_bluetooth_black_24dp))
                     .show(supportFragmentManager, "HI")
         }
 
-        buttonShowWithHeader.setOnClickListener {
+        binding.buttonShowWithHeader.setOnClickListener {
             ModalBottomSheetDialogFragment.Builder()
                     .add(R.menu.option_lots)
                     .header("Neat")
                     .show(supportFragmentManager, "HI")
         }
 
-        buttonCustom.setOnClickListener {
+        binding.buttonCustom.setOnClickListener {
             ModalBottomSheetDialogFragment.Builder()
                     .add(R.menu.option_lots)
                     .layout(R.layout.item_custom)
@@ -37,7 +40,7 @@ class MainActivity : AppCompatActivity(), ModalBottomSheetDialogFragment.Listene
                     .show(supportFragmentManager, "HI")
         }
 
-        buttonOrder.setOnClickListener {
+        binding.buttonOrder.setOnClickListener {
             ModalBottomSheetDialogFragment.Builder()
                     .add(R.menu.options)
                     .add(OptionRequest(123, "Custom", R.drawable.ic_bluetooth_black_24dp))
@@ -47,7 +50,7 @@ class MainActivity : AppCompatActivity(), ModalBottomSheetDialogFragment.Listene
     }
 
     override fun onModalOptionSelected(tag: String?, option: Option) {
-        Snackbar.make(root, "Selected option ${option.title} from tag $tag", Snackbar.LENGTH_SHORT)
+        Snackbar.make(binding.root, "Selected option ${option.title} from tag $tag", Snackbar.LENGTH_SHORT)
                 .show()
     }
 
