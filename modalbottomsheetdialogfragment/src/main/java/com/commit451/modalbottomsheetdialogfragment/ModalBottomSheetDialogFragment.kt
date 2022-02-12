@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.commit451.modalbottomsheetdialogfragment.ModalBottomSheetDialogFragment.Builder
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
+@Suppress("MemberVisibilityCanBePrivate")
 @SuppressLint("RestrictedApi")
 /**
  * [BottomSheetDialogFragment] which can show a selection of options. Create using the [Builder]
@@ -238,9 +239,9 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
                     val holder = ItemViewHolder(view)
                     view.setOnClickListener {
                         val position = if (header != null) {
-                            holder.adapterPosition - 1
+                            holder.bindingAdapterPosition - 1
                         } else {
-                            holder.adapterPosition
+                            holder.bindingAdapterPosition
                         }
                         val option = options[position]
                         callback.invoke(option)
@@ -275,6 +276,7 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
             return VIEW_TYPE_ITEM
         }
 
+        @SuppressLint("NotifyDataSetChanged")
         fun set(options: List<Option>) {
             this.options.clear()
             this.options.addAll(options)
