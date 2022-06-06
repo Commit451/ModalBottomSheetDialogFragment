@@ -20,7 +20,7 @@ allprojects {
 Then, add the library to your project `build.gradle`
 ```gradle
 dependencies {
-    implementation 'com.github.Commit451:ModalBottomSheetDialogFragment:latest.version.here'
+    implementation("com.github.Commit451:ModalBottomSheetDialogFragment:latest.version.here")
 }
 ```
 
