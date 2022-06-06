@@ -1,5 +1,6 @@
 # ModalBottomSheetDialogFragment
 Modal bottom sheet dialog based on the [Material Guidelines](https://material.io/components/sheets-bottom)
+
 [![](https://jitpack.io/v/Commit451/ModalBottomSheetDialogFragment.svg)](https://jitpack.io/#Commit451/ModalBottomSheetDialogFragment)
 
 <img src="/art/simple.png?raw=true" width="200px"> <img src="/art/header.png?raw=true" width="200px"> <img src="/art/custom.png?raw=true" width="200px">
@@ -53,9 +54,17 @@ ModalBottomSheetDialogFragment.Builder()
     .add(R.menu.options)
     .show(supportFragmentManager, "options")
 ```
-Make sure that your activity or fragment implements `ModalBottomSheetDialogFragment.Listener`. For example:
+Make sure that your `Activity` or `Fragment` implements `ModalBottomSheetDialogFragment.Listener`. For example:
 ```kotlin
 override fun onModalOptionSelected(tag: String?, option: Option) {
+    when (option.id) {
+        R.id.action_edit -> {
+            // edit something
+        }
+        R.id.action_delete -> {
+            // delete something
+        }
+    }
     Snackbar.make(root, "Selected option ${option.title} from fragment with tag $tag", Snackbar.LENGTH_SHORT)
             .show()
 }
