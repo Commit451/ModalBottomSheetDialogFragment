@@ -76,7 +76,7 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
                 inflate(resource, options)
             }
             if (optionRequest != null) {
-                options.add(optionRequest.toOption(context!!))
+                options.add(optionRequest.toOption(requireContext()))
             }
         }
 
