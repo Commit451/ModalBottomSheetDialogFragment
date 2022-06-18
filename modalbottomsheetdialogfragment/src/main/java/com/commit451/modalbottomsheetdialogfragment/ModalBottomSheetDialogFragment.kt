@@ -32,6 +32,7 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
         private const val KEY_COLUMNS = "columns"
         private const val KEY_HEADER = "header"
         private const val KEY_HEADER_LAYOUT_RES = "header_layout_res"
+        private const val KEY_ROUNDED = "rounded"
 
         private fun newInstance(builder: Builder): ModalBottomSheetDialogFragment {
             val fragment = ModalBottomSheetDialogFragment()
@@ -41,6 +42,7 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
             args.putInt(KEY_COLUMNS, builder.columns)
             args.putString(KEY_HEADER, builder.header)
             args.putInt(KEY_HEADER_LAYOUT_RES, builder.headerLayoutRes)
+            args.putBoolean(KEY_ROUNDED, builder.isRounded)
             fragment.arguments = args
             return fragment
         }
@@ -56,6 +58,16 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.modal_bottom_sheet_dialog_fragment, container, false)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val arguments = arguments
+            ?: throw IllegalStateException("You need to create this via the builder")
+        val isRounded = arguments.getBoolean(KEY_ROUNDED)
+        if (isRounded){
+            setStyle(STYLE_NORMAL, R.style.RoundedBottomSheetDialogTheme)
+        }
     }
 
     @SuppressLint("RestrictedApi")
@@ -143,6 +155,7 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
         internal var columns = 1
         internal var header: String? = null
         internal var headerLayoutRes = R.layout.modal_bottom_sheet_dialog_fragment_header
+        internal var isRounded = false
 
         /**
          * Inflate the given menu resource to the options
@@ -184,6 +197,14 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
         fun header(header: String, @LayoutRes layoutRes: Int = R.layout.modal_bottom_sheet_dialog_fragment_header): Builder {
             this.header = header
             this.headerLayoutRes = layoutRes
+            return this
+        }
+
+        /*
+        * Set rounded on top bottom sheet dialog
+        */
+        fun rounded(isRounded: Boolean): Builder{
+            this.isRounded = isRounded
             return this
         }
 

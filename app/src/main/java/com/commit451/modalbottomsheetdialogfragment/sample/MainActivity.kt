@@ -47,6 +47,15 @@ class MainActivity : AppCompatActivity(), ModalBottomSheetDialogFragment.Listene
                     .add(R.menu.option_money)
                     .show(supportFragmentManager, "HI")
         }
+
+        binding.buttonRounded.setOnClickListener {
+            ModalBottomSheetDialogFragment.Builder()
+                .add(R.menu.options)
+                .add(OptionRequest(123, "Custom", R.drawable.ic_bluetooth_black_24dp))
+                .add(R.menu.option_money)
+                .rounded(true)
+                .show(supportFragmentManager, "HI")
+        }
     }
 
     override fun onModalOptionSelected(tag: String?, option: Option) {

@@ -40,4 +40,12 @@
         android:layout_margin="8dp"
         android:text="Show Retains Order" />
 
+    <Button
+        android:id="@+id/buttonRounded"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="8dp"
+        android:text="Show Rounded" />
+
 </LinearLayout>
