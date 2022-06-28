@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.annotation.MenuRes
+import androidx.annotation.StyleRes
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.GridLayoutManager
@@ -32,7 +33,7 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
         private const val KEY_COLUMNS = "columns"
         private const val KEY_HEADER = "header"
         private const val KEY_HEADER_LAYOUT_RES = "header_layout_res"
-        private const val KEY_ROUNDED = "rounded"
+        private const val KEY_THEME = "theme"
 
         private fun newInstance(builder: Builder): ModalBottomSheetDialogFragment {
             val fragment = ModalBottomSheetDialogFragment()
@@ -42,7 +43,7 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
             args.putInt(KEY_COLUMNS, builder.columns)
             args.putString(KEY_HEADER, builder.header)
             args.putInt(KEY_HEADER_LAYOUT_RES, builder.headerLayoutRes)
-            args.putBoolean(KEY_ROUNDED, builder.isRounded)
+            builder.theme?.let { args.putInt(KEY_THEME, it) }
             fragment.arguments = args
             return fragment
         }
@@ -66,13 +67,10 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val arguments = arguments
-            ?: throw IllegalStateException("You need to create this via the builder")
-        val isRounded = arguments.getBoolean(KEY_ROUNDED)
-        if (isRounded) {
-            setStyle(STYLE_NORMAL, R.style.ModalBottomSheetDialogThemeRounded)
-        } else {
-            setStyle(STYLE_NORMAL, R.style.ModalBottomSheetDialogTheme)
+        val arguments = checkArguments()
+        val theme = arguments.getInt(KEY_THEME)
+        if (theme != 0) {
+            setStyle(STYLE_NORMAL, theme)
         }
     }
 
@@ -80,9 +78,7 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         list = view.findViewById(R.id.list)
-        val arguments = arguments
-            ?: throw IllegalStateException("You need to create this via the builder")
-
+        val arguments = checkArguments()
         val optionHolders = arguments.getParcelableArrayList<OptionHolder>(KEY_OPTIONS)!!
 
         val options = mutableListOf<Option>()
@@ -150,6 +146,12 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
         throw IllegalStateException("ModalBottomSheetDialogFragment must be attached to a parent (activity or fragment) that implements the ModalBottomSheetDialogFragment.Listener")
     }
 
+    private fun checkArguments(): Bundle {
+        return arguments
+            ?: throw IllegalStateException("You need to create this via the builder")
+
+    }
+
     /**
      * Used to build a [ModalBottomSheetDialogFragment]
      */
@@ -162,7 +164,9 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
         internal var columns = 1
         internal var header: String? = null
         internal var headerLayoutRes = R.layout.modal_bottom_sheet_dialog_fragment_header
-        internal var isRounded = false
+
+        @StyleRes
+        internal var theme: Int? = null
 
         /**
          * Inflate the given menu resource to the options
@@ -210,11 +214,8 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
             return this
         }
 
-        /*
-        * Set rounded on top bottom sheet dialog
-        */
-        fun rounded(isRounded: Boolean): Builder {
-            this.isRounded = isRounded
+        fun theme(@StyleRes theme: Int): Builder {
+            this.theme = theme
             return this
         }
 

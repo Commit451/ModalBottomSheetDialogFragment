@@ -6,4 +6,6 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="ModalBottomSheetDialogTheme" parent="Theme.Material3.DayNight.BottomSheetDialog" />
+
 </resources>

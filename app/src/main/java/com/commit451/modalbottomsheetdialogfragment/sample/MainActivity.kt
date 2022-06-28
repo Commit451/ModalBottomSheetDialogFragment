@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity(), ModalBottomSheetDialogFragment.Listene
                 .add(R.menu.options)
                 .add(OptionRequest(123, "Custom", R.drawable.ic_bluetooth_black_24dp))
                 .add(R.menu.option_money)
-                .rounded(true)
+                .theme(R.style.ModalBottomSheetDialogTheme)
                 .show(supportFragmentManager, "HI")
         }
     }

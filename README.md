@@ -76,6 +76,7 @@ ModalBottomSheetDialogFragment.Builder()
     //custom option, without needing menu XML
     .add(OptionRequest(123, "Custom", R.drawable.ic_bluetooth_black_24dp))
     .layout(R.layout.item_custom)
+    .theme(R.style.CustomTheme)
     .header("Neat")
     .columns(3)
     .show(supportFragmentManager, "custom")
