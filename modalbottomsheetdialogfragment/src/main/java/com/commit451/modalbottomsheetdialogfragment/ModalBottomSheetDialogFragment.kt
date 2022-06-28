@@ -56,7 +56,11 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
         MenuInflater(context)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.modal_bottom_sheet_dialog_fragment, container, false)
     }
 
@@ -65,8 +69,10 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
         val arguments = arguments
             ?: throw IllegalStateException("You need to create this via the builder")
         val isRounded = arguments.getBoolean(KEY_ROUNDED)
-        if (isRounded){
-            setStyle(STYLE_NORMAL, R.style.RoundedBottomSheetDialogTheme)
+        if (isRounded) {
+            setStyle(STYLE_NORMAL, R.style.ModalBottomSheetDialogThemeRounded)
+        } else {
+            setStyle(STYLE_NORMAL, R.style.ModalBottomSheetDialogTheme)
         }
     }
 
@@ -75,7 +81,7 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         list = view.findViewById(R.id.list)
         val arguments = arguments
-                ?: throw IllegalStateException("You need to create this via the builder")
+            ?: throw IllegalStateException("You need to create this via the builder")
 
         val optionHolders = arguments.getParcelableArrayList<OptionHolder>(KEY_OPTIONS)!!
 
@@ -150,6 +156,7 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
     class Builder {
 
         internal var options = ArrayList<OptionHolder>()
+
         @LayoutRes
         internal var layoutRes = R.layout.modal_bottom_sheet_dialog_fragment_item
         internal var columns = 1
@@ -194,7 +201,10 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
         /**
          * Add a custom header to the modal, using the custom layout if provided
          */
-        fun header(header: String, @LayoutRes layoutRes: Int = R.layout.modal_bottom_sheet_dialog_fragment_header): Builder {
+        fun header(
+            header: String,
+            @LayoutRes layoutRes: Int = R.layout.modal_bottom_sheet_dialog_fragment_header
+        ): Builder {
             this.header = header
             this.headerLayoutRes = layoutRes
             return this
@@ -203,7 +213,7 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
         /*
         * Set rounded on top bottom sheet dialog
         */
-        fun rounded(isRounded: Boolean): Builder{
+        fun rounded(isRounded: Boolean): Builder {
             this.isRounded = isRounded
             return this
         }
@@ -235,7 +245,8 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
         fun onModalOptionSelected(tag: String?, option: Option)
     }
 
-    internal class Adapter(private val callback: (option: Option) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    internal class Adapter(private val callback: (option: Option) -> Unit) :
+        RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
         companion object {
             const val VIEW_TYPE_HEADER = 0
@@ -252,7 +263,8 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
             when (viewType) {
 
                 VIEW_TYPE_HEADER -> {
-                    val view = LayoutInflater.from(parent.context).inflate(headerLayoutRes, parent, false)
+                    val view =
+                        LayoutInflater.from(parent.context).inflate(headerLayoutRes, parent, false)
                     return HeaderViewHolder(view)
                 }
                 VIEW_TYPE_ITEM -> {

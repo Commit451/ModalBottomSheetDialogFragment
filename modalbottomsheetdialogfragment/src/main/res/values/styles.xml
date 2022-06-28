@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="RoundedBottomSheetDialogTheme"
-        parent="Theme.Design.Light.BottomSheetDialog">
-        <item name="bottomSheetStyle">@style/RedoundedModalStyle</item>
+
+    <style name="ModalBottomSheetDialogTheme" parent="Theme.Material3.DayNight.BottomSheetDialog"/>
+
+    <style name="ModalBottomSheetDialogThemeRounded" parent="Theme.Material3.DayNight.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/RoundedModalStyle</item>
     </style>
 
-    <style name="RedoundedModalStyle" parent="Widget.Design.BottomSheet.Modal">
+    <style name="RoundedModalStyle" parent="Widget.Material3.BottomSheet.Modal">
         <item name="android:background">@drawable/rounded</item>
     </style>
 </resources>
