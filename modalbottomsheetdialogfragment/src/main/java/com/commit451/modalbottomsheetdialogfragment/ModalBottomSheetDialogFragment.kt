@@ -19,11 +19,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.commit451.modalbottomsheetdialogfragment.ModalBottomSheetDialogFragment.Builder
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-@Suppress("MemberVisibilityCanBePrivate")
-@SuppressLint("RestrictedApi")
 /**
  * [BottomSheetDialogFragment] which can show a selection of options. Create using the [Builder]
  */
+@Suppress("MemberVisibilityCanBePrivate")
+@SuppressLint("RestrictedApi")
 class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
     companion object {
@@ -129,7 +129,7 @@ class ModalBottomSheetDialogFragment : BottomSheetDialogFragment() {
         menuInflater.inflate(menuRes, menu)
         for (i in 0 until menu.size()) {
             val item = menu.getItem(i)
-            val option = Option(item.itemId, item.title, item.icon)
+            val option = Option(item.itemId, item.title ?: "", item.icon)
             options.add(option)
         }
     }
